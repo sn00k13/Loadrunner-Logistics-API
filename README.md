@@ -22,6 +22,7 @@ It features JWT authentication, order management endpoints, and auto-generated A
 11. [Extending the API](#extending-the-api)
 12. [Contributing](#contributing)
 13. [License](#license)
+14. [GetBumpa Logistics API – Integration & Onboarding Guide](#getbumpa-logistics-api--integration--onboarding-guide)
 
 ---
 
@@ -262,6 +263,213 @@ Authorization: Bearer <your_token>
 ## License
 
 MIT (or your chosen license)
+
+---
+
+## GetBumpa Logistics API – Integration & Onboarding Guide
+
+Welcome to the GetBumpa Logistics API!
+This guide will walk you through the full order and tracking flow, including delivery fee estimation, order creation, and tracking updates.
+
+---
+
+## Authentication
+
+All endpoints require Bearer token authentication.
+
+- **Header:**  
+  `Authorization: Bearer <YOUR_API_KEY>`
+
+---
+
+## API Endpoints Overview
+
+| Purpose                | Method | Endpoint                                                 | Auth Required | Description                                  |
+| ---------------------- | ------ | -------------------------------------------------------- | ------------- | -------------------------------------------- |
+| Estimate Delivery Fee  | POST   | `/orders/estimate-delivery-fee`                          | Yes           | Calculate delivery fee before order creation |
+| Create Order           | POST   | `/orders`                                                | Yes           | Create a new order (with delivery fee)       |
+| Get Order By ID        | GET    | `/orders/{id}`                                           | Yes           | Fetch a specific order                       |
+| Add Tracking Event     | POST   | `/track/{tracking_number}/tracking`                      | Yes           | Add a tracking event by tracking number      |
+| Get Tracking Events    | GET    | `/track/{tracking_number}/tracking`                      | Yes           | Get all tracking events for an order         |
+| Get Latest Pickup Loc. | GET    | `/orders/track/{tracking_number}/latest-pickup-location` | Yes           | Get the latest pickup location for an order  |
+
+---
+
+## 1. Estimate Delivery Fee
+
+**Endpoint:**  
+`POST /orders/estimate-delivery-fee`
+
+**Request Body:**
+
+```json
+{
+	"address": "Ikeja, Lagos",
+	"city": "Lagos",
+	"region": "Southwest",
+	"item_type": "fragile",
+	"item_weight": 2
+}
+```
+
+- All fields are required for accurate fee calculation.
+
+**Response:**
+
+```json
+{
+	"delivery_fee": 2900,
+	"currency": "NGN",
+	"estimated_delivery_time": "2-3 days"
+}
+```
+
+---
+
+## 2. Create Order
+
+**Endpoint:**  
+`POST /orders`
+
+**Request Body:**
+
+```json
+{
+	"merchant_id": "abc123",
+	"item": "Shoes",
+	"quantity": 2,
+	"address": "Ikeja, Lagos",
+	"status": "order created",
+	"delivery_fee": 2900
+}
+```
+
+- Use the `delivery_fee` from the previous step.
+- `merchant_id` is required and must be unique per merchant.
+
+**Response:**
+
+```json
+{
+	"id": 1,
+	"merchant_id": "abc123",
+	"item": "Shoes",
+	"quantity": 2,
+	"address": "Ikeja, Lagos",
+	"status": "order created",
+	"delivery_fee": 2900,
+	"created_at": "2025-07-20T19:30:00.000Z",
+	"updated_at": "2025-07-20T19:30:00.000Z",
+	"tracking_number": "LOADRL-20250720-XXXXXX"
+}
+```
+
+---
+
+## 3. Add Tracking Event
+
+**Endpoint:**  
+`POST /track/{tracking_number}/tracking`
+
+**Request Body:**
+
+```json
+{
+	"status": "Picked up",
+	"pickup_location": "Warehouse A",
+	"timestamp": "2025-07-21T10:00:00Z"
+}
+```
+
+- `status` is required.
+- `pickup_location` and `timestamp` are optional, but recommended.
+
+**Response:**  
+Returns the created tracking event.
+
+---
+
+## 4. Get Tracking Events
+
+**Endpoint:**  
+`GET /track/{tracking_number}/tracking`
+
+**Response:**
+
+```json
+[
+	{
+		"id": 1,
+		"order_id": 123,
+		"status": "Picked up",
+		"pickup_location": "Warehouse A",
+		"timestamp": "2025-07-21T10:00:00Z"
+	}
+]
+```
+
+---
+
+## 5. Get Latest Pickup Location
+
+**Endpoint:**  
+`GET /orders/track/{tracking_number}/latest-pickup-location`
+
+**Response:**
+
+```json
+{
+	"tracking_number": "LOADRL-20250720-XXXXXX",
+	"pickup_location": "Warehouse A"
+}
+```
+
+---
+
+## 6. Get Order By ID
+
+**Endpoint:**  
+`GET /orders/{id}`
+
+**Response:**  
+Returns all order details, including `delivery_fee` and `tracking_number`.
+
+---
+
+## General Notes
+
+- All endpoints require the `Authorization` header.
+- All request/response bodies are JSON.
+- All times are in ISO 8601 format (UTC).
+- Use the `tracking_number` returned from order creation for all tracking operations.
+- Always estimate delivery fee before creating an order.
+
+---
+
+## Error Handling
+
+- 400: Bad Request (missing or invalid data)
+- 401: Unauthorized (missing or invalid API key)
+- 404: Not found (invalid order or tracking number)
+- 500: Internal server error
+
+---
+
+## Example Workflow
+
+1. **Estimate Fee:**  
+   Call `/orders/estimate-delivery-fee` with order details.
+2. **Create Order:**  
+   If the fee is accepted, call `/orders` with all order details and the `delivery_fee`.
+3. **Track Order:**  
+   Use the `tracking_number` to add or get tracking events.
+
+---
+
+## Contact & Support
+
+- For API keys, integration help, or support, contact:  
+  [Your Support Email/Contact Here]
 
 ---
 
