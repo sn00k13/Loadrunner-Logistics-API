@@ -180,7 +180,7 @@ router.post('/:id/status', authMiddleware, orderController.updateOrderStatus);
  *                   type: string
  */
 router.post(
-	'/orders/estimate-delivery-fee',
+	'/estimate-delivery-fee',
 	authMiddleware,
 	orderController.estimateDeliveryFee
 );
