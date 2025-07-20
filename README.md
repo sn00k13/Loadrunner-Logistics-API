@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a Node.js/Express REST API for managing orders from getbumpa.com merchants.
+This project is a Node.js/Express REST API for managing orders from online merchants.
 It features JWT authentication, order management endpoints, and auto-generated API docs via Swagger.
 
 ---
@@ -22,7 +22,7 @@ It features JWT authentication, order management endpoints, and auto-generated A
 11. [Extending the API](#extending-the-api)
 12. [Contributing](#contributing)
 13. [License](#license)
-14. [GetBumpa Logistics API – Integration & Onboarding Guide](#getbumpa-logistics-api--integration--onboarding-guide)
+14. [LoadRunner Logistics API – Integration & Onboarding Guide](#loadrunner-logistics-api--integration--onboarding-guide)
 
 ---
 
@@ -73,7 +73,7 @@ src/
 
    ```bash
    git clone <your-repo-url>
-   cd getbumpa-logistics-api
+   cd loadrunner-logistics-api
    ```
 
 2. **Install dependencies**
