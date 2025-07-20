@@ -266,9 +266,9 @@ MIT (or your chosen license)
 
 ---
 
-## GetBumpa Logistics API – Integration & Onboarding Guide
+## LoadRunner Logistics API – Integration & Onboarding Guide
 
-Welcome to the GetBumpa Logistics API!
+Welcome to the LoadRunner Logistics API!
 This guide will walk you through the full order and tracking flow, including delivery fee estimation, order creation, and tracking updates.
 
 ---
