@@ -124,4 +124,6 @@ router.get('/:id', authMiddleware, orderController.getOrder);
  *         description: Status updated successfully
  */
 router.post('/:id/status', authMiddleware, orderController.updateOrderStatus);
+
+router.get('/', authMiddleware, orderController.getAllOrders);
 module.exports = router;

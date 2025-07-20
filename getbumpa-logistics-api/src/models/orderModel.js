@@ -22,3 +22,8 @@ exports.updateOrderStatus = async (id, status) => {
   );
   return result.rowCount > 0;
 };
+
+exports.getAllOrders = async () => {
+  const result = await db.query('SELECT * FROM orders');
+  return result.rows;
+};
