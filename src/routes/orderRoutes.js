@@ -35,9 +35,6 @@ const authMiddleware = require('../middleware/authMiddleware');
  *               address:
  *                 type: string
  *                 description: Delivery address
- *               pickup_location:
- *                 type: string
- *                 description: Pickup location of the order
  *               updated_at:
  *                 type: string
  *                 format: date-time
@@ -48,7 +45,6 @@ const authMiddleware = require('../middleware/authMiddleware');
  *               - quantity
  *               - status
  *               - address
- *               - pickup_location
  *     responses:
  *       201:
  *         description: Order created successfully
@@ -134,9 +130,6 @@ router.get('/:id', authMiddleware, orderController.getOrder);
  *               status:
  *                 type: string
  *                 description: New status for the order (e.g., pending, shipped, delivered)
- *               pickup_location:
- *                 type: string
- *                 description: Updated pickup location (optional)
  *             required:
  *               - status
  *     responses:
@@ -229,6 +222,43 @@ router.get(
 	trackingController.getTrackingEventsByTrackingNumber
 );
 
+/**
+ * @swagger
+ * /orders/track/{tracking_number}/latest-pickup-location:
+ *   get:
+ *     summary: Get the latest pickup location for an order by tracking number
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Tracking
+ *     parameters:
+ *       - in: path
+ *         name: tracking_number
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The tracking number for the order
+ *     responses:
+ *       200:
+ *         description: Latest pickup location for the order
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 tracking_number:
+ *                   type: string
+ *                 pickup_location:
+ *                   type: string
+ *       404:
+ *         description: No pickup location found for this tracking number
+ */
+router.get(
+	'/track/:tracking_number/latest-pickup-location',
+	authMiddleware,
+	trackingController.getLatestPickupLocation
+);
+
 // Removed deprecated order_id-based tracking endpoints
 // router.post('/:id/tracking', authMiddleware, trackingController.addTrackingEvent);
 // router.get('/:id/tracking', authMiddleware, trackingController.getTrackingEvents);
@@ -253,8 +283,6 @@ module.exports = router;
  *         address:
  *           type: string
  *         status:
- *           type: string
- *         pickup_location:
  *           type: string
  *         updated_at:
  *           type: string

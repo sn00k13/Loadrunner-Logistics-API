@@ -8,15 +8,13 @@ const generateTrackingNumber = () => {
 
 exports.createOrder = async (req, res) => {
 	try {
-		const { merchant_id, item, quantity, address, status, pickup_location } =
-			req.body;
+		const { merchant_id, item, quantity, address, status } = req.body;
 		const orderData = {
 			merchant_id,
 			item,
 			quantity,
 			address,
 			status,
-			pickup_location,
 			tracking_number: generateTrackingNumber(),
 		};
 		const order = await orderModel.createOrder(orderData);
@@ -45,7 +43,6 @@ exports.updateOrderStatus = async (req, res) => {
 		const updated = await orderModel.updateOrderStatus(
 			Number(req.params.id),
 			req.body.status,
-			req.body.pickup_location,
 			req.body.updated_at || new Date()
 		);
 		if (!updated) return res.status(404).json({ error: 'Order not found' });

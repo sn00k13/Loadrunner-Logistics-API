@@ -32,3 +32,23 @@ exports.getTrackingEventsByTrackingNumber = async (req, res) => {
 		res.status(500).json({ error: err.message });
 	}
 };
+
+// Get the latest pickup_location for an order by tracking_number
+exports.getLatestPickupLocation = async (req, res) => {
+	try {
+		const { tracking_number } = req.params;
+		const pickup_location =
+			await require('../models/trackingModel').getLatestPickupLocationByTrackingNumber(
+				tracking_number
+			);
+		if (!pickup_location) {
+			return res
+				.status(404)
+				.json({ error: 'No pickup location found for this tracking number' });
+		}
+		res.json({ tracking_number, pickup_location });
+	} catch (err) {
+		console.error('Error fetching latest pickup_location:', err);
+		res.status(500).json({ error: 'Internal server error' });
+	}
+};

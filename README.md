@@ -183,6 +183,23 @@ Authorization: Bearer <your_token>
 
 ---
 
+#### Get Latest Pickup Location for an Order
+
+- `GET /orders/track/{tracking_number}/latest-pickup-location`
+- **Response:**
+  ```json
+  { "tracking_number": "...", "pickup_location": "..." }
+  ```
+- Returns the most recent pickup location for the order based on tracking events.
+
+---
+
+### Order Tracking
+
+- `pickup_location` removed from orders table and order creation API. To get pickup location for an order, query the latest tracking event from the order_tracking table using the order's tracking_number.
+
+---
+
 ## Error Handling
 
 - All errors return a JSON response with an `error` or `message` field.

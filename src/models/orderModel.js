@@ -1,22 +1,11 @@
 const db = require('../utils/db');
 
 exports.createOrder = async (orderData) => {
+	const { merchant_id, item, quantity, address, status, tracking_number } =
+		orderData;
 	const result = await db.query(
-		`INSERT INTO orders 
-      (merchant_id, item, quantity, address, status, pickup_location, created_at, updated_at, tracking_number) 
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
-     RETURNING *`,
-		[
-			orderData.merchant_id,
-			orderData.item,
-			orderData.quantity,
-			orderData.address,
-			orderData.status || 'pending',
-			orderData.pickup_location,
-			orderData.created_at || new Date(),
-			orderData.updated_at || new Date(),
-			orderData.tracking_number,
-		]
+		'INSERT INTO orders (merchant_id, item, quantity, address, status, created_at, updated_at, tracking_number) VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), $6) RETURNING *',
+		[merchant_id, item, quantity, address, status, tracking_number]
 	);
 	return result.rows[0];
 };
@@ -26,15 +15,10 @@ exports.getOrderById = async (id) => {
 	return result.rows[0];
 };
 
-exports.updateOrderStatus = async (
-	id,
-	status,
-	pickup_location = null,
-	updated_at = new Date()
-) => {
+exports.updateOrderStatus = async (orderId, status, updated_at) => {
 	const result = await db.query(
-		'UPDATE orders SET status = $1, pickup_location = $2, updated_at = $3 WHERE id = $4 RETURNING *',
-		[status, pickup_location, updated_at, id]
+		'UPDATE orders SET status = $1, updated_at = $2 WHERE id = $3 RETURNING *',
+		[status, updated_at, orderId]
 	);
 	return result.rows[0];
 };

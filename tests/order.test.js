@@ -10,14 +10,13 @@ describe('Order API', () => {
 		apiKey = process.env.API_KEY || '74a26bb0b14934f5b978c3e0b100039a';
 	});
 
-	// Ensure test orderData includes all required fields for order creation, especially pickup_location and status, to prevent 400 errors during test runs.
+	// Ensure test orderData includes all required fields for order creation, especially status, to prevent 400 errors during test runs.
 	const orderData = {
 		merchant_id: 'test-merchant',
 		item: 'Widget',
 		quantity: 2,
 		address: '123 Test Street',
 		status: 'pending',
-		pickup_location: 'Test Warehouse',
 	};
 
 	it('should return 401 when no token is provided', async () => {
@@ -33,7 +32,6 @@ describe('Order API', () => {
 		expect(res.statusCode).toBe(201);
 		expect(res.body).toHaveProperty('id');
 		expect(res.body.merchant_id).toBe(orderData.merchant_id);
-		expect(res.body).toHaveProperty('pickup_location');
 		createdOrderId = res.body.id;
 	});
 
@@ -56,10 +54,6 @@ describe('Order API', () => {
 		expect(res.body.quantity).toBe(orderData.quantity);
 		expect(res.body.address).toBe(orderData.address);
 		expect(res.body.status).toBe(orderData.status);
-		expect(res.body).toHaveProperty(
-			'pickup_location',
-			orderData.pickup_location
-		);
 	});
 
 	it('should return 404 for a non-existent order ID', async () => {
@@ -73,11 +67,10 @@ describe('Order API', () => {
 		const res = await request(app)
 			.post(`/orders/${createdOrderId}/status`)
 			.set('Authorization', `Bearer ${apiKey}`)
-			.send({ status: 'shipped', pickup_location: 'New Pickup Location' });
+			.send({ status: 'shipped' });
 		expect(res.statusCode).toBe(200);
 		expect(res.body).toHaveProperty('id', createdOrderId);
 		expect(res.body.status).toBe('shipped');
-		expect(res.body).toHaveProperty('pickup_location', 'New Pickup Location');
 	});
 
 	it('should return 400 when updating status with missing field', async () => {
