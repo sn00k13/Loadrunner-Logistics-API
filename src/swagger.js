@@ -4,14 +4,14 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'GetBumpa Logistics API',
+      title: 'LoadRunner Logistics API',
       version: '1.0.0',
       description: 'API for receiving and managing orders from getbumpa.com merchants',
     },
     servers: [
       {
         url: 'http://localhost:5000',
-        description: 'Development server'
+        description: 'API server'
       }
     ],
     components: {

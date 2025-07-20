@@ -19,27 +19,26 @@ const authMiddleware = require('../middleware/authMiddleware');
  *           schema:
  *             type: object
  *             properties:
- *               customerId:
+ *               merchant_id:
  *                 type: string
- *                 description: The ID of the customer placing the order
- *               items:
- *                 type: array
- *                 description: List of items in the order
- *                 items:
- *                   type: object
- *                   properties:
- *                     productId:
- *                       type: string
- *                       description: The product ID
- *                     quantity:
- *                       type: integer
- *                       description: Quantity of the product
+ *                 description: The Name of the merchant placing the order
+ *               item:
+ *                 type: string
+ *                 description: The item in the order
+ *               quantity:
+ *                 type: integer
+ *                 description: Quantity of the item
+ *               status:
+ *                 type: string
+ *                 description: Status of the order
  *               address:
  *                 type: string
  *                 description: Delivery address
  *             required:
- *               - customerId
- *               - items
+ *               - merchant_id
+ *               - item
+ *               - quantity
+ *               - status
  *               - address
  *     responses:
  *       201:
@@ -73,14 +72,14 @@ router.post('/', authMiddleware, orderController.createOrder);
  *               properties:
  *                 id:
  *                   type: string
- *                 customerId:
+ *                 merchant_id:
  *                   type: string
  *                 items:
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
- *                       productId:
+ *                       item:
  *                         type: string
  *                       quantity:
  *                         type: integer
