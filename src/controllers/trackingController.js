@@ -52,3 +52,17 @@ exports.getLatestPickupLocation = async (req, res) => {
 		res.status(500).json({ error: 'Internal server error' });
 	}
 };
+
+// Get all tracking events in the order_tracking table
+exports.getAllTrackingEvents = async (req, res) => {
+	try {
+		const db = require('../utils/db');
+		const result = await db.query(
+			'SELECT * FROM order_tracking ORDER BY id ASC'
+		);
+		res.json(result.rows);
+	} catch (err) {
+		console.error('Error fetching all tracking events:', err);
+		res.status(500).json({ error: 'Internal server error' });
+	}
+};

@@ -198,6 +198,18 @@ Authorization: Bearer <your_token>
 
 - `pickup_location` removed from orders table and order creation API. To get pickup location for an order, query the latest tracking event from the order_tracking table using the order's tracking_number.
 
+#### Get All Tracking Events (Admin/Debug)
+
+- `GET /track/all`
+- **Response:**
+  ```json
+  [
+    { "id": 1, "order_id": 123, "status": "Picked up", "pickup_location": "Warehouse A", ... },
+    ...
+  ]
+  ```
+- Returns all tracking events in the order_tracking table (requires API key).
+
 ---
 
 ## Error Handling

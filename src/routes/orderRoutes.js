@@ -259,6 +259,31 @@ router.get(
 	trackingController.getLatestPickupLocation
 );
 
+/**
+ * @swagger
+ * /track/all:
+ *   get:
+ *     summary: Get all tracking events (admin/debug only)
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Tracking
+ *     responses:
+ *       200:
+ *         description: List of all tracking events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TrackingEvent'
+ */
+router.get(
+	'/track/all',
+	authMiddleware,
+	trackingController.getAllTrackingEvents
+);
+
 // Removed deprecated order_id-based tracking endpoints
 // router.post('/:id/tracking', authMiddleware, trackingController.addTrackingEvent);
 // router.get('/:id/tracking', authMiddleware, trackingController.getTrackingEvents);
