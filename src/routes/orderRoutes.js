@@ -35,9 +35,9 @@ const authMiddleware = require('../middleware/authMiddleware');
  *               address:
  *                 type: string
  *                 description: Delivery address
- *               location:
+ *               pickup_location:
  *                 type: string
- *                 description: Current location of the order
+ *                 description: Pickup location of the order
  *               updated_at:
  *                 type: string
  *                 format: date-time
@@ -48,6 +48,7 @@ const authMiddleware = require('../middleware/authMiddleware');
  *               - quantity
  *               - status
  *               - address
+ *               - pickup_location
  *     responses:
  *       201:
  *         description: Order created successfully
@@ -133,6 +134,9 @@ router.get('/:id', authMiddleware, orderController.getOrder);
  *               status:
  *                 type: string
  *                 description: New status for the order (e.g., pending, shipped, delivered)
+ *               pickup_location:
+ *                 type: string
+ *                 description: Updated pickup location (optional)
  *             required:
  *               - status
  *     responses:
@@ -147,20 +151,20 @@ router.post('/:id/status', authMiddleware, orderController.updateOrderStatus);
 
 /**
  * @swagger
- * /orders/{id}/tracking:
+ * /orders/track/{tracking_number}/tracking:
  *   post:
- *     summary: Add a tracking event to an order
+ *     summary: Add a tracking event using tracking number
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - Tracking
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: tracking_number
  *         required: true
  *         schema:
  *           type: string
- *         description: The order ID
+ *         description: The tracking number for the order
  *     requestBody:
  *       required: true
  *       content:
@@ -170,10 +174,14 @@ router.post('/:id/status', authMiddleware, orderController.updateOrderStatus);
  *             properties:
  *               status:
  *                 type: string
- *                 description: Tracking status (e.g., Picked up, In transit, Delivered)
- *               location:
+ *                 description: Status for the tracking event (e.g., Picked up, In transit, Delivered)
+ *               pickup_location:
  *                 type: string
- *                 description: Location for this tracking event
+ *                 description: Where the event occurred (optional)
+ *               timestamp:
+ *                 type: string
+ *                 format: date-time
+ *                 description: When the event occurred (optional)
  *             required:
  *               - status
  *     responses:
@@ -183,29 +191,21 @@ router.post('/:id/status', authMiddleware, orderController.updateOrderStatus);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/TrackingEvent'
- */
-router.post(
-	'/:id/tracking',
-	authMiddleware,
-	trackingController.addTrackingEvent
-);
-
-/**
- * @swagger
- * /orders/{id}/tracking:
+ *       400:
+ *         description: Invalid input
  *   get:
- *     summary: Get tracking history for an order
+ *     summary: Get all tracking events for an order by tracking number
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - Tracking
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: tracking_number
  *         required: true
  *         schema:
  *           type: string
- *         description: The order ID
+ *         description: The tracking number for the order
  *     responses:
  *       200:
  *         description: List of tracking events
@@ -215,12 +215,23 @@ router.post(
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/TrackingEvent'
+ *       404:
+ *         description: Order or tracking events not found
  */
-router.get(
-	'/:id/tracking',
+router.post(
+	'/track/:tracking_number/tracking',
 	authMiddleware,
-	trackingController.getTrackingEvents
+	trackingController.addTrackingEventByTrackingNumber
 );
+router.get(
+	'/track/:tracking_number/tracking',
+	authMiddleware,
+	trackingController.getTrackingEventsByTrackingNumber
+);
+
+// Removed deprecated order_id-based tracking endpoints
+// router.post('/:id/tracking', authMiddleware, trackingController.addTrackingEvent);
+// router.get('/:id/tracking', authMiddleware, trackingController.getTrackingEvents);
 
 module.exports = router;
 
@@ -243,7 +254,7 @@ module.exports = router;
  *           type: string
  *         status:
  *           type: string
- *         location:
+ *         pickup_location:
  *           type: string
  *         updated_at:
  *           type: string
@@ -260,7 +271,7 @@ module.exports = router;
  *           type: integer
  *         status:
  *           type: string
- *         location:
+ *         pickup_location:
  *           type: string
  *         timestamp:
  *           type: string
