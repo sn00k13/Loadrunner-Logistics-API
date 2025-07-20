@@ -194,6 +194,29 @@ Authorization: Bearer <your_token>
 
 ---
 
+#### Estimate Delivery Fee
+
+- `POST /orders/estimate-delivery-fee`
+- **Request body:**
+  ```json
+  {
+  	"address": "Lagos, Nigeria",
+  	"item": "Shoes",
+  	"quantity": 2
+  }
+  ```
+- **Response:**
+  ```json
+  {
+  	"delivery_fee": 1900,
+  	"currency": "NGN",
+  	"estimated_delivery_time": "2-3 days"
+  }
+  ```
+- Returns estimated delivery fee and ETA (does not create the order).
+
+---
+
 ### Order Tracking
 
 - `pickup_location` removed from orders table and order creation API. To get pickup location for an order, query the latest tracking event from the order_tracking table using the order's tracking_number.

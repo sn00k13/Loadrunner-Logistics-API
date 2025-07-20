@@ -144,6 +144,49 @@ router.post('/:id/status', authMiddleware, orderController.updateOrderStatus);
 
 /**
  * @swagger
+ * /orders/estimate-delivery-fee:
+ *   post:
+ *     summary: Estimate delivery fee for an order (does not create order)
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Orders
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               address:
+ *                 type: string
+ *               item:
+ *                 type: string
+ *               quantity:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Estimated delivery fee
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 delivery_fee:
+ *                   type: number
+ *                 currency:
+ *                   type: string
+ *                 estimated_delivery_time:
+ *                   type: string
+ */
+router.post(
+	'/orders/estimate-delivery-fee',
+	authMiddleware,
+	orderController.estimateDeliveryFee
+);
+
+/**
+ * @swagger
  * /orders/track/{tracking_number}/tracking:
  *   post:
  *     summary: Add a tracking event using tracking number

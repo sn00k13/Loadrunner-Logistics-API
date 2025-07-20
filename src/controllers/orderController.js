@@ -62,3 +62,49 @@ exports.getAllOrders = async (req, res) => {
 		res.status(500).json({ message: 'Failed to fetch orders' });
 	}
 };
+
+// Customized delivery fee estimation
+exports.estimateDeliveryFee = async (req, res) => {
+	try {
+		const {
+			address = '',
+			city = '',
+			region = '',
+			item_type = '',
+			item_weight = 1,
+		} = req.body;
+
+		// Example logic (customize as needed):
+		let baseFee = 1000;
+
+		// Region/city/address logic
+		let locationFee = 1000;
+		if (
+			city.toLowerCase() === 'lagos' ||
+			address.toLowerCase().includes('lagos')
+		) {
+			locationFee = 500;
+		} else if (region.toLowerCase() === 'southwest') {
+			locationFee = 800;
+		}
+
+		// Item type logic
+		let typeFee = 0;
+		if (item_type.toLowerCase() === 'fragile') typeFee = 800;
+		else if (item_type.toLowerCase() === 'electronics') typeFee = 600;
+		else if (item_type.toLowerCase() === 'clothing') typeFee = 200;
+
+		// Item weight logic (per kg, min 1kg)
+		let weightFee = Math.max(item_weight, 1) * 300;
+
+		const delivery_fee = baseFee + locationFee + typeFee + weightFee;
+		res.json({
+			delivery_fee,
+			currency: 'NGN',
+			estimated_delivery_time: '2-3 days',
+		});
+	} catch (err) {
+		console.error('Error estimating delivery fee:', err);
+		res.status(500).json({ error: 'Internal server error' });
+	}
+};
