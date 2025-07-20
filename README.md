@@ -469,7 +469,7 @@ Returns all order details, including `delivery_fee` and `tracking_number`.
 ## Contact & Support
 
 - For API keys, integration help, or support, contact:  
-  [Your Support Email/Contact Here]
+  [devops@bubblebarrel.dev](mailto:devops@bubblebarrel.dev)
 
 ---
 
