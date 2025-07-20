@@ -20,7 +20,7 @@ exports.updateOrderStatus = async (id, status) => {
     'UPDATE orders SET status = $1 WHERE id = $2 RETURNING *',
     [status, id]
   );
-  return result.rowCount > 0;
+  return result.rows[0];
 };
 
 exports.getAllOrders = async () => {

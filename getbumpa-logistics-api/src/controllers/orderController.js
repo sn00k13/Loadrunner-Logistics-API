@@ -15,7 +15,7 @@ exports.getOrder = async (req, res) => {
     if (!order) return res.status(404).json({ error: 'Order not found' });
     res.json(order);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(404).json({ error: err.message });
   }
 };
 
@@ -23,7 +23,7 @@ exports.updateOrderStatus = async (req, res) => {
   try {
     const updated = await orderModel.updateOrderStatus(req.params.id, req.body.status);
     if (!updated) return res.status(404).json({ error: 'Order not found' });
-    res.json({ message: 'Status updated' });
+    res.json(updated);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
