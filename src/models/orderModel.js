@@ -1,11 +1,26 @@
 const db = require('../utils/db');
 
 exports.createOrder = async (orderData) => {
-	const { merchant_id, item, quantity, address, status, tracking_number } =
-		orderData;
+	const {
+		merchant_id,
+		item,
+		quantity,
+		address,
+		status,
+		tracking_number,
+		delivery_fee,
+	} = orderData;
 	const result = await db.query(
-		'INSERT INTO orders (merchant_id, item, quantity, address, status, created_at, updated_at, tracking_number) VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), $6) RETURNING *',
-		[merchant_id, item, quantity, address, status, tracking_number]
+		'INSERT INTO orders (merchant_id, item, quantity, address, status, delivery_fee, created_at, updated_at, tracking_number) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), $7) RETURNING *',
+		[
+			merchant_id,
+			item,
+			quantity,
+			address,
+			status,
+			delivery_fee,
+			tracking_number,
+		]
 	);
 	return result.rows[0];
 };

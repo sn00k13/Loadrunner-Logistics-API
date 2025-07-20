@@ -8,20 +8,22 @@ const generateTrackingNumber = () => {
 
 exports.createOrder = async (req, res) => {
 	try {
-		const { merchant_id, item, quantity, address, status } = req.body;
-		const orderData = {
+		const { merchant_id, item, quantity, address, status, delivery_fee } =
+			req.body;
+		const tracking_number = generateTrackingNumber();
+		const order = await orderModel.createOrder({
 			merchant_id,
 			item,
 			quantity,
 			address,
 			status,
-			tracking_number: generateTrackingNumber(),
-		};
-		const order = await orderModel.createOrder(orderData);
+			tracking_number,
+			delivery_fee,
+		});
 		res.status(201).json(order);
 	} catch (err) {
 		console.error('Order creation error:', err);
-		res.status(400).json({ error: err.message });
+		res.status(500).json({ error: err.message });
 	}
 };
 
