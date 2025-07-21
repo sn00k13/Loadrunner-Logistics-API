@@ -322,7 +322,7 @@ router.get(
  *                 $ref: '#/components/schemas/TrackingEvent'
  */
 router.get(
-	'orders/track/all',
+	'/track/all',
 	authMiddleware,
 	trackingController.getAllTrackingEvents
 );
