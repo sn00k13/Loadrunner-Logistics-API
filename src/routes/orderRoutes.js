@@ -304,7 +304,7 @@ router.get(
 
 /**
  * @swagger
- * /track/all:
+ * /orders/track/all:
  *   get:
  *     summary: Get all tracking events (admin/debug only)
  *     security:
@@ -322,7 +322,7 @@ router.get(
  *                 $ref: '#/components/schemas/TrackingEvent'
  */
 router.get(
-	'/track/all',
+	'orders/track/all',
 	authMiddleware,
 	trackingController.getAllTrackingEvents
 );
