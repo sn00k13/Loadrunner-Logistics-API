@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://bumpa-api.onrender.com',
+        url: 'https://api.loadrunnerl.cloud',
         description: 'API server'
       }
     ],
