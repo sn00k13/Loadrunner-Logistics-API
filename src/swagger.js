@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://api.loadrunnerl.cloud',
+        url: 'https://api.loadrunnerl.cloud/orders',
         description: 'API server'
       }
     ],
