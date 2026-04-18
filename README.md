@@ -1,60 +1,61 @@
-# LoadRunner Logistics API
+# 🚚 LoadRunner Logistics API
 
-## Overview
+> A plug-and-play REST API for ecommerce merchants to estimate delivery fees, create orders, and track shipments in real time.
 
-This project is a Node.js/Express REST API for managing orders from online merchants.
-It features JWT authentication, order management endpoints, and auto-generated API docs via Swagger.
-
----
-
-## Table of Contents
-
-1. [Features](#features)
-2. [Tech Stack](#tech-stack)
-3. [Project Structure](#project-structure)
-4. [Setup & Installation](#setup--installation)
-5. [Environment Variables](#environment-variables)
-6. [Running the API](#running-the-api)
-7. [API Documentation (Swagger)](#api-documentation-swagger)
-8. [Authentication](#authentication)
-9. [API Endpoints](#api-endpoints)
-10. [Error Handling](#error-handling)
-11. [Extending the API](#extending-the-api)
-12. [Contributing](#contributing)
-13. [License](#license)
-14. [LoadRunner Logistics API – Integration & Onboarding Guide](#loadrunner-logistics-api--integration--onboarding-guide)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=flat-square&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=black)
+![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black)
+![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 
 ---
 
-## Features
+## 🧩 What It Does
 
-- Create, fetch, and update orders
-- JWT-based authentication
-- Secure headers via Helmet
-- CORS enabled
-- Interactive API documentation with Swagger UI
+LoadRunner lets any ecommerce app integrate logistics in minutes:
 
----
+- **Estimate delivery fees** before an order is placed
+- **Create and manage orders** tied to merchant accounts
+- **Track shipments** end-to-end with pickup location history
+- **Generate tracking numbers** automatically on order creation
 
-## Tech Stack
-
-- Node.js
-- Express.js
-- PostgreSQL (via `db` utility)
-- Swagger (OpenAPI 3.0)
-- JWT for authentication
-- Helmet, CORS
+Built for Nigerian ecommerce but easily adaptable to any market.
 
 ---
 
-## Project Structure
+## ✨ Features
+
+- 📦 Full order lifecycle — create, update, and track
+- 💰 Delivery fee estimation by address, region, item type, and weight
+- 🔐 JWT Bearer token authentication
+- 📍 Real-time shipment tracking with pickup location history
+- 📄 Interactive API docs via Swagger UI
+- 🛡️ Secure headers with Helmet + CORS enabled
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js |
+| Framework | Express.js |
+| Database | PostgreSQL |
+| Auth | JWT (Bearer Token) |
+| Docs | Swagger / OpenAPI 3.0 |
+| Security | Helmet, CORS |
+
+---
+
+## 📁 Project Structure
 
 ```
 src/
-  ├─ app.js                # Main Express app
-  ├─ swagger.js            # Swagger/OpenAPI config
+  ├─ app.js                 # Main Express app
+  ├─ swagger.js             # Swagger/OpenAPI config
   ├─ routes/
-  │    └─ orderRoutes.js   # Order-related endpoints
+  │    └─ orderRoutes.js    # Order endpoints
   ├─ controllers/
   │    └─ orderController.js
   ├─ models/
@@ -62,63 +63,54 @@ src/
   ├─ middleware/
   │    └─ authMiddleware.js
   └─ utils/
-       └─ db.js            # Database connection utilities
+       └─ db.js             # PostgreSQL connection utility
 ```
 
 ---
 
-## Setup & Installation
+## ⚙️ Getting Started
 
-1. **Clone the repository**
+### 1. Clone the repo
 
-   ```bash
-   git clone <your-repo-url>
-   cd loadrunner-logistics-api
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Set up your database**
-   Ensure PostgreSQL is running and you have created the required tables.
-
----
-
-## Environment Variables
-
-Create a `.env` file in the root directory with the following variables (example):
-
+```bash
+git clone https://github.com/sn00k13/BUMPA-API.git
+cd BUMPA-API
 ```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file in the root:
+
+```env
 PORT=5000
-DATABASE_URL=postgres://username:password@localhost:5432/yourdb
+DATABASE_URL=postgresql://user:password@localhost:5432/loadrunner
 JWT_SECRET=your_jwt_secret
 ```
 
----
-
-## Running the API
+### 4. Start the server
 
 ```bash
+# Development
+npm run dev
+
+# Production
 npm start
 ```
 
-The API will be available at `http://localhost:5000`.
+The API will be available at `http://localhost:5000`.  
+Swagger docs at `http://localhost:5000/api-docs`.
 
 ---
 
-## API Documentation (Swagger)
+## 🔐 Authentication
 
-Interactive API docs are available at:  
-**[http://localhost:5000/api-docs](http://localhost:5000/api-docs)**
-
----
-
-## Authentication
-
-All endpoints (except health check `/`) require a valid JWT token in the `Authorization` header:
+All endpoints (except the health check) require a valid JWT token:
 
 ```
 Authorization: Bearer <your_token>
@@ -126,351 +118,157 @@ Authorization: Bearer <your_token>
 
 ---
 
-## API Endpoints
+## 📡 API Endpoints
 
 ### Health Check
 
-- `GET /`  
-  Returns: `"API is running"`
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Returns `"API is running"` |
 
 ---
 
 ### Orders
 
-#### Create Order
-
-- `POST /orders`
-- **Body:**
-  ```json
-  {
-  	"customerId": "string",
-  	"items": [{ "productId": "string", "quantity": 1 }],
-  	"address": "string"
-  }
-  ```
-- **Response:**  
-  `201 Created` with the created order object
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/orders/estimate-delivery-fee` | Estimate fee before creating an order |
+| POST | `/orders` | Create a new order |
+| GET | `/orders` | Get all orders |
+| GET | `/orders/:id` | Get order by ID |
+| POST | `/orders/:id/status` | Update order status |
+| GET | `/orders/track/:tracking_number/latest-pickup-location` | Get latest pickup location |
 
 ---
 
-#### Get All Orders
+### Tracking
 
-- `GET /orders`
-- **Response:**  
-  `200 OK`  
-  Returns a list of all orders
-
----
-
-#### Get Order by ID
-
-- `GET /orders/:id`
-- **Response:**  
-  `200 OK`  
-  Returns the order object
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/track/:tracking_number/tracking` | Add a tracking event |
+| GET | `/track/:tracking_number/tracking` | Get all tracking events |
+| GET | `/track/all` | Get all tracking events (admin) |
 
 ---
 
-#### Update Order Status
+## 🔄 Integration Workflow
 
-- `POST /orders/:id/status`
-- **Body:**
-  ```json
-  { "status": "pending | shipped | delivered | ..." }
-  ```
-- **Response:**  
-  `200 OK`  
-  Returns confirmation of update
+Follow this sequence to integrate LoadRunner into your ecommerce app:
 
----
+### Step 1 — Estimate Delivery Fee
 
-#### Get Latest Pickup Location for an Order
+```http
+POST /orders/estimate-delivery-fee
+```
 
-- `GET /orders/track/{tracking_number}/latest-pickup-location`
-- **Response:**
-  ```json
-  { "tracking_number": "...", "pickup_location": "..." }
-  ```
-- Returns the most recent pickup location for the order based on tracking events.
+```json
+{
+  "address": "Ikeja, Lagos",
+  "city": "Lagos",
+  "region": "Southwest",
+  "item_type": "fragile",
+  "item_weight": 2
+}
+```
 
----
+**Response:**
 
-#### Estimate Delivery Fee
-
-- `POST /orders/estimate-delivery-fee`
-- **Request body:**
-  ```json
-  {
-  	"address": "Lagos, Nigeria",
-  	"item": "Shoes",
-  	"quantity": 2
-  }
-  ```
-- **Response:**
-  ```json
-  {
-  	"delivery_fee": 1900,
-  	"currency": "NGN",
-  	"estimated_delivery_time": "2-3 days"
-  }
-  ```
-- Returns estimated delivery fee and ETA (does not create the order).
+```json
+{
+  "delivery_fee": 2900,
+  "currency": "NGN",
+  "estimated_delivery_time": "2-3 days"
+}
+```
 
 ---
 
-### Order Tracking
+### Step 2 — Create Order
 
-- `pickup_location` removed from orders table and order creation API. To get pickup location for an order, query the latest tracking event from the order_tracking table using the order's tracking_number.
+```http
+POST /orders
+```
 
-#### Get All Tracking Events (Admin/Debug)
+```json
+{
+  "merchant_id": "abc123",
+  "item": "Shoes",
+  "quantity": 2,
+  "address": "Ikeja, Lagos",
+  "status": "order created",
+  "delivery_fee": 2900
+}
+```
 
-- `GET /track/all`
-- **Response:**
-  ```json
-  [
-    { "id": 1, "order_id": 123, "status": "Picked up", "pickup_location": "Warehouse A", ... },
-    ...
-  ]
-  ```
-- Returns all tracking events in the order_tracking table (requires API key).
+**Response:**
 
----
-
-## Error Handling
-
-- All errors return a JSON response with an `error` or `message` field.
-- Common HTTP status codes used: `400`, `401`, `404`, `500`.
-
----
-
-## Extending the API
-
-- Add new routes in `routes/`
-- Implement business logic in `controllers/`
-- Add database queries in `models/`
-- Document new endpoints with Swagger JSDoc comments
+```json
+{
+  "id": 1,
+  "tracking_number": "LOADRL-20250720-XXXXXX",
+  "status": "order created",
+  "delivery_fee": 2900,
+  "created_at": "2025-07-20T19:30:00.000Z"
+}
+```
 
 ---
 
-## Contributing
+### Step 3 — Track the Order
+
+```http
+POST /track/{tracking_number}/tracking
+```
+
+```json
+{
+  "status": "Picked up",
+  "pickup_location": "Warehouse A",
+  "timestamp": "2025-07-21T10:00:00Z"
+}
+```
+
+Then retrieve updates:
+
+```http
+GET /track/{tracking_number}/tracking
+```
+
+---
+
+## ⚠️ Error Codes
+
+| Code | Meaning |
+|---|---|
+| 400 | Bad Request — missing or invalid data |
+| 401 | Unauthorized — missing or invalid token |
+| 404 | Not Found — order or tracking number doesn't exist |
+| 500 | Internal Server Error |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how:
 
 1. Fork the repo
-2. Create a feature branch
-3. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes
+4. Open a pull request
+
+Ideas for contributions: multi-currency support, webhook notifications, carrier integrations, rate caching.
 
 ---
 
-## License
+## 👤 Author
 
-MIT (or your chosen license)
-
----
-
-## LoadRunner Logistics API – Integration & Onboarding Guide
-
-Welcome to the LoadRunner Logistics API!
-This guide will walk you through the full order and tracking flow, including delivery fee estimation, order creation, and tracking updates.
+**Ugochukwu Okonkwo**
+- GitHub: [@sn00k13](https://github.com/sn00k13)
+- LinkedIn: [ugochukwu-c-okonkwo](https://linkedin.com/in/ugochukwu-c-okonkwo)
+- Support: [devops@bubblebarrel.dev](mailto:devops@bubblebarrel.dev)
 
 ---
 
-## Authentication
+## 📄 License
 
-All endpoints require Bearer token authentication.
-
-- **Header:**  
-  `Authorization: Bearer <YOUR_API_KEY>`
-
----
-
-## API Endpoints Overview
-
-| Purpose                | Method | Endpoint                                                 | Auth Required | Description                                  |
-| ---------------------- | ------ | -------------------------------------------------------- | ------------- | -------------------------------------------- |
-| Estimate Delivery Fee  | POST   | `/orders/estimate-delivery-fee`                          | Yes           | Calculate delivery fee before order creation |
-| Create Order           | POST   | `/orders`                                                | Yes           | Create a new order (with delivery fee)       |
-| Get Order By ID        | GET    | `/orders/{id}`                                           | Yes           | Fetch a specific order                       |
-| Add Tracking Event     | POST   | `/track/{tracking_number}/tracking`                      | Yes           | Add a tracking event by tracking number      |
-| Get Tracking Events    | GET    | `/track/{tracking_number}/tracking`                      | Yes           | Get all tracking events for an order         |
-| Get Latest Pickup Loc. | GET    | `/orders/track/{tracking_number}/latest-pickup-location` | Yes           | Get the latest pickup location for an order  |
-
----
-
-## 1. Estimate Delivery Fee
-
-**Endpoint:**  
-`POST /orders/estimate-delivery-fee`
-
-**Request Body:**
-
-```json
-{
-	"address": "Ikeja, Lagos",
-	"city": "Lagos",
-	"region": "Southwest",
-	"item_type": "fragile",
-	"item_weight": 2
-}
-```
-
-- All fields are required for accurate fee calculation.
-
-**Response:**
-
-```json
-{
-	"delivery_fee": 2900,
-	"currency": "NGN",
-	"estimated_delivery_time": "2-3 days"
-}
-```
-
----
-
-## 2. Create Order
-
-**Endpoint:**  
-`POST /orders`
-
-**Request Body:**
-
-```json
-{
-	"merchant_id": "abc123",
-	"item": "Shoes",
-	"quantity": 2,
-	"address": "Ikeja, Lagos",
-	"status": "order created",
-	"delivery_fee": 2900
-}
-```
-
-- Use the `delivery_fee` from the previous step.
-- `merchant_id` is required and must be unique per merchant.
-
-**Response:**
-
-```json
-{
-	"id": 1,
-	"merchant_id": "abc123",
-	"item": "Shoes",
-	"quantity": 2,
-	"address": "Ikeja, Lagos",
-	"status": "order created",
-	"delivery_fee": 2900,
-	"created_at": "2025-07-20T19:30:00.000Z",
-	"updated_at": "2025-07-20T19:30:00.000Z",
-	"tracking_number": "LOADRL-20250720-XXXXXX"
-}
-```
-
----
-
-## 3. Add Tracking Event
-
-**Endpoint:**  
-`POST /track/{tracking_number}/tracking`
-
-**Request Body:**
-
-```json
-{
-	"status": "Picked up",
-	"pickup_location": "Warehouse A",
-	"timestamp": "2025-07-21T10:00:00Z"
-}
-```
-
-- `status` is required.
-- `pickup_location` and `timestamp` are optional, but recommended.
-
-**Response:**  
-Returns the created tracking event.
-
----
-
-## 4. Get Tracking Events
-
-**Endpoint:**  
-`GET /track/{tracking_number}/tracking`
-
-**Response:**
-
-```json
-[
-	{
-		"id": 1,
-		"order_id": 123,
-		"status": "Picked up",
-		"pickup_location": "Warehouse A",
-		"timestamp": "2025-07-21T10:00:00Z"
-	}
-]
-```
-
----
-
-## 5. Get Latest Pickup Location
-
-**Endpoint:**  
-`GET /orders/track/{tracking_number}/latest-pickup-location`
-
-**Response:**
-
-```json
-{
-	"tracking_number": "LOADRL-20250720-XXXXXX",
-	"pickup_location": "Warehouse A"
-}
-```
-
----
-
-## 6. Get Order By ID
-
-**Endpoint:**  
-`GET /orders/{id}`
-
-**Response:**  
-Returns all order details, including `delivery_fee` and `tracking_number`.
-
----
-
-## General Notes
-
-- All endpoints require the `Authorization` header.
-- All request/response bodies are JSON.
-- All times are in ISO 8601 format (UTC).
-- Use the `tracking_number` returned from order creation for all tracking operations.
-- Always estimate delivery fee before creating an order.
-
----
-
-## Error Handling
-
-- 400: Bad Request (missing or invalid data)
-- 401: Unauthorized (missing or invalid API key)
-- 404: Not found (invalid order or tracking number)
-- 500: Internal server error
-
----
-
-## Example Workflow
-
-1. **Estimate Fee:**  
-   Call `/orders/estimate-delivery-fee` with order details.
-2. **Create Order:**  
-   If the fee is accepted, call `/orders` with all order details and the `delivery_fee`.
-3. **Track Order:**  
-   Use the `tracking_number` to add or get tracking events.
-
----
-
-## Contact & Support
-
-- For API keys, integration help, or support, contact:  
-  [devops@bubblebarrel.dev](mailto:devops@bubblebarrel.dev)
-
----
-
-**For further details, see the Swagger UI at `/api-docs` or review the codebase.**
+MIT © Ugochukwu Okonkwo
